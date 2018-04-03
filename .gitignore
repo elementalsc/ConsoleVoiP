@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+*.pdb
+*.tlog
+*.idb
+*.unsuccessfulbuild
+*.log
+*.lastbuildstate
+*.suo
+*.sdf
+*.opensdf
+*.ib_pdb_index

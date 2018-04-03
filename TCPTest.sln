@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPServer", "TCPTest\TCPTest.vcxproj", "{18E03F44-E7D8-4421-AF79-24037B3B042E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPClient", "TCPClient\TCPClient.vcxproj", "{81B43A39-3A50-46A4-8338-6122F4F5A8FA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StandAlone", "StandAlone\StandAlone.vcxproj", "{BFEBFAAC-3290-4400-8621-ADA9A60CB6CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18E03F44-E7D8-4421-AF79-24037B3B042E}.Debug|Win32.ActiveCfg = Release|Win32
+		{18E03F44-E7D8-4421-AF79-24037B3B042E}.Debug|Win32.Build.0 = Release|Win32
+		{18E03F44-E7D8-4421-AF79-24037B3B042E}.Release|Win32.ActiveCfg = Release|Win32
+		{18E03F44-E7D8-4421-AF79-24037B3B042E}.Release|Win32.Build.0 = Release|Win32
+		{81B43A39-3A50-46A4-8338-6122F4F5A8FA}.Debug|Win32.ActiveCfg = Release|Win32
+		{81B43A39-3A50-46A4-8338-6122F4F5A8FA}.Debug|Win32.Build.0 = Release|Win32
+		{81B43A39-3A50-46A4-8338-6122F4F5A8FA}.Release|Win32.ActiveCfg = Release|Win32
+		{81B43A39-3A50-46A4-8338-6122F4F5A8FA}.Release|Win32.Build.0 = Release|Win32
+		{BFEBFAAC-3290-4400-8621-ADA9A60CB6CF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFEBFAAC-3290-4400-8621-ADA9A60CB6CF}.Debug|Win32.Build.0 = Debug|Win32
+		{BFEBFAAC-3290-4400-8621-ADA9A60CB6CF}.Release|Win32.ActiveCfg = Release|Win32
+		{BFEBFAAC-3290-4400-8621-ADA9A60CB6CF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
