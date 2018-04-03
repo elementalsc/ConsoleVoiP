@@ -46,6 +46,7 @@ bool TcpAudioClient::init(std::string iHost, std::string iPort)
     std::cout << "Host address invalid!" << std::endl;
     return false;
   }
+
   if(!std::regex_match(iPort,std::regex("\\d{1,5}")))
   { 
     std::cout << "Port number invalid!" << std::endl;
@@ -113,13 +114,11 @@ bool TcpAudioClient::broadcast(bool iEnableSending)
       return false;
     }
 
-
     std::cout << std::endl << "Successfully closed connection!" << std::endl;
 
     // Stop recording
     stop();
     mEnableSending = false;
-    
     return true;
   }
 }
@@ -134,6 +133,7 @@ bool TcpAudioClient::onProcessSamples(const sf::Int16* samples, std::size_t samp
 
   // EnableSending gate
   if(!mEnableSending) return false;
+
   // Send over TCP
   try
   {
@@ -149,6 +149,7 @@ bool TcpAudioClient::onProcessSamples(const sf::Int16* samples, std::size_t samp
     std::cout << "boost::asio error : " << ec.message() << std::endl;
     std::cerr << "Exception :" << std::endl << e.what() << "\n";
   }
+
   // Continue processing
   return true;
 }

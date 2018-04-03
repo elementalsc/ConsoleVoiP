@@ -1,11 +1,9 @@
 #include <iostream>
 #include <mutex>
-#include <thread>
-#include <SFML/Audio.hpp>
 #include <string>
-#include <deque>
-#include <boost/asio.hpp>
 #include <regex>
+#include <boost/asio.hpp>
+#include <SFML/Audio.hpp>
 
 using namespace boost;
 using namespace boost::asio::ip;
@@ -26,18 +24,12 @@ private:
   bool onProcessSamples(const sf::Int16* samples, std::size_t sampleCount);
 
   bool mEnableSending;
-
-  // setup tcp ip variables
-  std::string mHost;// = "localhost";
-  std::string mPort;// = "2112";
-  asio::io_service    mService;
+  std::string mHost;
+  std::string mPort;
+  asio::io_service mService;
   tcp::socket*   mSocket;
   tcp::resolver* mResolver;
   tcp::resolver::query*  mQuery;
   boost::system::error_code ec;
-
   std::mutex mSocketMutex;
-
-
-
 };

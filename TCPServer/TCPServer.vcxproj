@@ -46,10 +46,12 @@
     <ClCompile Include="AudioStream.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="TcpAudioServer.cpp" />
+    <ClCompile Include="TcpAudioSession.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioStream.h" />
     <ClInclude Include="TcpAudioServer.h" />
+    <ClInclude Include="TcpAudioSession.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

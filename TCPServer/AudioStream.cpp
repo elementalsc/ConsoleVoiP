@@ -1,10 +1,7 @@
-
 #include "AudioStream.h"
-#include <iostream>
 
 AudioStream::AudioStream() :
-  m_offset     (0),
-  m_hasFinished(false)
+  mOffset     (0)
 {
   // Set the sound parameters
   initialize(1, 44100);
@@ -14,85 +11,50 @@ AudioStream::AudioStream() :
 void AudioStream::start()
 {
   play();
-//   if (!m_hasFinished)
-//   {
-//     // Start playback
-//     play();
-// 
-//     // Start receiving audio data
-//     receiveLoop();
-//   }
-//   else
-//   {
-//     // Start playback
-//     play();
-//   }
 }
 
 
 bool AudioStream::onGetData(sf::SoundStream::Chunk& data)
 {
-  // We have reached the end of the buffer and all audio data have been played: we can stop playback
-  if ((m_offset >= m_samples.size()) && m_hasFinished)
-    return false;
 
   // No new data has arrived since last update: wait until we get some
-  while ((m_offset >= m_samples.size()) && !m_hasFinished)
-    sf::sleep(sf::milliseconds(10));
+  while (mOffset >= mSamples.size())
+  {
+    sf::sleep(sf::milliseconds(20));
+  }
 
   // Copy samples into a local buffer to avoid synchronization problems
   // (don't forget that we run in two separate threads)
   {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    m_tempBuffer.assign(m_samples.begin() + m_offset, m_samples.end());
+    std::lock_guard<std::mutex> lock(mSamplesMutex);
+    mTempBuffer.assign(mSamples.begin() + mOffset, mSamples.end());
   }
 
-
-  // je crois que c'est en ajoutant du stock à data que le stream considère qu'un reçoit un chunk
   // Fill audio data to pass to the stream
-  data.samples     = &m_tempBuffer[0];
-  data.sampleCount = m_tempBuffer.size();
+  data.samples     = &mTempBuffer[0];
+  data.sampleCount = mTempBuffer.size();
 
   // Update the playing offset
-  m_offset += m_tempBuffer.size();
+  mOffset += mTempBuffer.size();
 
   return true;
 }
 
-
 void AudioStream::onSeek(sf::Time timeOffset)
 {
-  m_offset = timeOffset.asMilliseconds() * getSampleRate() * getChannelCount() / 1000;
+  mOffset = timeOffset.asMilliseconds() * getSampleRate() * getChannelCount() / 1000;
 }
 
 void AudioStream::feed(const char* iCharSamples, unsigned int iSampleCount)
 {
-
+  // Convert data from uint8 to samples format
   const sf::Int16* samples     = reinterpret_cast<const sf::Int16*>(iCharSamples);
   std::size_t      sampleCount = iSampleCount;
 
+  // Copy new samples to class buffer
   {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    std::copy(samples, samples + sampleCount, std::back_inserter(m_samples));
+    std::lock_guard<std::mutex> lock(mSamplesMutex);
+    std::copy(samples, samples + sampleCount, std::back_inserter(mSamples));
   }
-
-}
-void AudioStream::receiveLoop()
-{
-//   while (!m_hasFinished)
-//   {
-//     // Get waiting audio data from the network
-// 
-//     // Extract audio samples from the packet, and append it to our samples buffer
-//     const sf::Int16* samples     = reinterpret_cast<const sf::Int16*>(static_cast<const char*>(packet.getData()) + 1);
-//    std::size_t      sampleCount = (packet.getDataSize() - 1) / sizeof(sf::Int16);
-// 
-//     // Don't forget that the other thread can access the sample array at any time
-//     // (so we protect any operation on it with the mutex)
-//     {
-//       std::lock_guard<std::mutex> lock(m_mutex);
-//       std::copy(samples, samples + sampleCount, std::back_inserter(m_samples));
-//     }
-//   }
 }
 
