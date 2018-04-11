@@ -15,7 +15,7 @@ public:
   ~TcpAudioClient();
 
   bool init(std::string iHost, std::string iPort);
-  bool broadcast(bool iEnableSending);
+  bool send(bool iEnableSending);
 
 private:
 
@@ -25,11 +25,12 @@ private:
 
   bool mEnableSending;
   std::string mHost;
-  std::string mPort;
+  int mPort;
+
   asio::io_service mService;
   tcp::socket*   mSocket;
   tcp::resolver* mResolver;
-  tcp::resolver::query*  mQuery;
   boost::system::error_code ec;
   std::mutex mSocketMutex;
+  unsigned int mDebouncingTime;
 };

@@ -7,9 +7,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{18E03F44-E7D8-4421-AF79-24037B3B042E}</ProjectGuid>
-    <RootNamespace>TCPServer</RootNamespace>
-    <ProjectName>TCPServer</ProjectName>
+    <ProjectGuid>{FED9E608-AE2F-44A5-AD43-2C2357DA05F8}</ProjectGuid>
+    <RootNamespace>UDPClient</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -43,15 +42,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Audio\AudioStream.cpp" />
-    <ClCompile Include="TCPServer.cpp" />
-    <ClCompile Include="TcpAudioServer.cpp" />
-    <ClCompile Include="TcpAudioSession.cpp" />
+    <ClCompile Include="UdpAudioClient.cpp" />
+    <ClCompile Include="UDPClient.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Audio\AudioStream.h" />
-    <ClInclude Include="TcpAudioServer.h" />
-    <ClInclude Include="TcpAudioSession.h" />
+    <ClInclude Include="UdpAudioClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

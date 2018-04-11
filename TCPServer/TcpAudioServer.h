@@ -8,7 +8,7 @@ public:
   TcpAudioServer(boost::asio::io_service &iService, const short iPort);
 
 private:
-  void doAccept();
+  void accept();
 
   boost::asio::ip::tcp::acceptor mAcceptor;
   boost::asio::ip::tcp::socket mSocket;

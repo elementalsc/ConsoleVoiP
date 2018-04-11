@@ -1,10 +1,8 @@
-
 #include "TcpAudioClient.h"
 #include <conio.h>
 
 int main()
 {
-
   std::string input;
   TcpAudioClient client;
 
@@ -23,6 +21,6 @@ int main()
   {
     _getch();
     button = !button;
-    client.broadcast(button);
+    client.send(button);
   }
 }

@@ -6,10 +6,10 @@ TcpAudioServer::TcpAudioServer(boost::asio::io_service & service, const short po
   mTcpAudioSessionCount(0)
 {
   mAcceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address());
-  doAccept();
+  accept();
 }
 
-void TcpAudioServer::doAccept() 
+void TcpAudioServer::accept() 
 {
   mAcceptor.async_accept(mSocket, 
     [this](boost::system::error_code error) 
@@ -18,6 +18,6 @@ void TcpAudioServer::doAccept()
     {
       std::make_shared<TcpAudioSession>(std::move(mSocket), std::move(mTcpAudioSessionCount++))->start();
     }
-    doAccept();
+    accept();
   });
 }

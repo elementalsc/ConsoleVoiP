@@ -1,8 +1,13 @@
 #include "TcpAudioClient.h"
 
 
-TcpAudioClient::TcpAudioClient() : mEnableSending(false)
+TcpAudioClient::TcpAudioClient() : 
+  mEnableSending(false),
+  mDebouncingTime(125)
 {
+
+  mResolver = new tcp::resolver(mService);
+
    // get the available sound input device names
    std::vector<std::string> availableDevices = sf::SoundRecorder::getAvailableDevices();
 // 
@@ -30,11 +35,9 @@ TcpAudioClient::TcpAudioClient() : mEnableSending(false)
 TcpAudioClient::~TcpAudioClient()
 {
   std::lock_guard<std::mutex> lock(mSocketMutex);
-  mSocket->shutdown(tcp::socket::shutdown_both, ec);
   mSocket->close();
   if(!mSocket)    delete mSocket;
   if(!mResolver)  delete mResolver;
-  if(!mQuery)     delete mQuery;
 }
 
 
@@ -54,12 +57,12 @@ bool TcpAudioClient::init(std::string iHost, std::string iPort)
   }
 
   mHost = iHost;
-  mPort = iPort;
+  mPort = stoi(iPort);
   return true;
 }
 
 
-bool TcpAudioClient::broadcast(bool iEnableSending)
+bool TcpAudioClient::send(bool iEnableSending)
 {
 
   // Enable
@@ -68,26 +71,37 @@ bool TcpAudioClient::broadcast(bool iEnableSending)
     // Check actual state of switch
     if(mEnableSending) return true;
 
+    // Debouncing
+    Sleep(mDebouncingTime);
+
     // Open connection
     try
     {
       std::lock_guard<std::mutex> lock(mSocketMutex);
       mSocket = new tcp::socket(mService);
-      mResolver = new tcp::resolver(mService);
-      mQuery = new tcp::resolver::query(mHost, mPort);
-      connect(*mSocket, mResolver->resolve(*mQuery),ec);
+      address_v4 wIpAddress = address_v4::from_string(mHost);
+      tcp::endpoint wEndpoint = tcp::endpoint(wIpAddress, mPort);
+      tcp::resolver::iterator wEndpointIterator = mResolver->resolve(wEndpoint);
+      connect(*mSocket, wEndpointIterator, ec);
     } 
     catch (std::exception& e)
     {
       std::cerr << "Exception :" << std::endl << e.what() << "\n";
       return false;
     }
-
-
+    
     std::cout << std::endl << "Successfully opened connection!" << std::endl;
+
+    // Wait for recorder to become available
+    while(!isAvailable())
+    {
+      Sleep(10);
+    }
 
     // Start recording
     start();
+
+    std::cout << std::endl << "Recording started..." << std::endl;
     mEnableSending = true;
     return true;
   }
@@ -97,16 +111,16 @@ bool TcpAudioClient::broadcast(bool iEnableSending)
   {
     // Check actual state of switch
     if(!mEnableSending) return true;
-    
+
+    // Debouncing
+    Sleep(mDebouncingTime);
+
     // Close connection
     try
     {      
       std::lock_guard<std::mutex> lock(mSocketMutex);
-      mSocket->shutdown(tcp::socket::shutdown_both, ec);
       mSocket->close();
       if(!mSocket)    delete mSocket;
-      if(!mResolver)  delete mResolver;
-      if(!mQuery)     delete mQuery;
     } 
     catch (std::exception& e)
     {

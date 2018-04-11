@@ -5,6 +5,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPServer", "TCPServer\TCPS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPClient", "TCPClient\TCPClient.vcxproj", "{81B43A39-3A50-46A4-8338-6122F4F5A8FA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPClient", "UDPClient\UDPClient.vcxproj", "{FED9E608-AE2F-44A5-AD43-2C2357DA05F8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UDPServer", "UDPServer\UDPServer.vcxproj", "{0BD0939B-BA28-469A-814C-8BE068D294DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +23,14 @@ Global
 		{81B43A39-3A50-46A4-8338-6122F4F5A8FA}.Debug|Win32.Build.0 = Release|Win32
 		{81B43A39-3A50-46A4-8338-6122F4F5A8FA}.Release|Win32.ActiveCfg = Release|Win32
 		{81B43A39-3A50-46A4-8338-6122F4F5A8FA}.Release|Win32.Build.0 = Release|Win32
+		{FED9E608-AE2F-44A5-AD43-2C2357DA05F8}.Debug|Win32.ActiveCfg = Release|Win32
+		{FED9E608-AE2F-44A5-AD43-2C2357DA05F8}.Debug|Win32.Build.0 = Release|Win32
+		{FED9E608-AE2F-44A5-AD43-2C2357DA05F8}.Release|Win32.ActiveCfg = Release|Win32
+		{FED9E608-AE2F-44A5-AD43-2C2357DA05F8}.Release|Win32.Build.0 = Release|Win32
+		{0BD0939B-BA28-469A-814C-8BE068D294DF}.Debug|Win32.ActiveCfg = Release|Win32
+		{0BD0939B-BA28-469A-814C-8BE068D294DF}.Debug|Win32.Build.0 = Release|Win32
+		{0BD0939B-BA28-469A-814C-8BE068D294DF}.Release|Win32.ActiveCfg = Release|Win32
+		{0BD0939B-BA28-469A-814C-8BE068D294DF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

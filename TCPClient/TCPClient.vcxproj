@@ -42,7 +42,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TcpAudioClient.cpp" />
   </ItemGroup>
   <ItemGroup>
