@@ -26,11 +26,11 @@ private:
   bool mEnableSending;
   std::string mHost;
   int mPort;
+  std::mutex mSocketMutex;
+  unsigned int mDebouncingTime;
 
   asio::io_service mService;
   tcp::socket*   mSocket;
   tcp::resolver* mResolver;
   boost::system::error_code ec;
-  std::mutex mSocketMutex;
-  unsigned int mDebouncingTime;
 };

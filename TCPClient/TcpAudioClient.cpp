@@ -172,11 +172,11 @@ bool TcpAudioClient::onProcessSamples(const sf::Int16* samples, std::size_t samp
 
 bool TcpAudioClient::onStart() // optional
 {
-  std::cout << "Started recording :D" << std::endl;
+  std::cout << "Started TCPAudioClient" << std::endl;
   return true;
 }
 
 void TcpAudioClient::onStop() // optional
 {
-  std::cout << "Recording stopped :(" << std::endl;
+  std::cout << "Stopped TCPAudioClient" << std::endl;
 }

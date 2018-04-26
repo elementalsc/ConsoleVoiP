@@ -5,7 +5,7 @@
 #include <boost/asio.hpp>
 #include <SFML/Audio.hpp>
 
-class UdpAudioClient
+class UdpAudioClient : public sf::SoundRecorder
 {
 public:
 
@@ -13,7 +13,8 @@ public:
   ~UdpAudioClient();
   
   bool init(std::string & iHost, std::string & iPort);
-  void send(std::string & iTextToSend);
+  //void send(std::string & iTextToSend);
+  bool send(bool iEnableSending);
 
 private:
 
@@ -22,5 +23,15 @@ private:
   boost::asio::ip::udp::endpoint* mEndpoint;
   short unsigned int mPort;
   std::string mHost;
+  boost::system::error_code ec;
+
+  bool mEnableSending;
+  std::mutex mSocketMutex;
+  unsigned int mDebouncingTime;
+
+  // SFML SoundStream methods
+  bool onStart();
+  void onStop();
+  bool onProcessSamples(const sf::Int16* samples, std::size_t sampleCount);
 
 };

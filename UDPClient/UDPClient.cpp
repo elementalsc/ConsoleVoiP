@@ -23,10 +23,15 @@ int main()
 //     client.broadcast(button);
 //   }
 
+  std::cout << "Enabled successfully! Press enter to toggle broadcasting..." << std::endl;
+
+  bool button = false;
+
   while(1)
   {
-    std::cin >> input;
-    client.send(input);
+    _getch();
+    button = !button;
+    client.send(button);
   }
 
 }
