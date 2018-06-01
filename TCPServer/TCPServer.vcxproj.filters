@@ -4,11 +4,9 @@
     <ClCompile Include="TcpAudioServer.cpp" />
     <ClCompile Include="TcpAudioSession.cpp" />
     <ClCompile Include="TCPServer.cpp" />
-    <ClCompile Include="..\Audio\AudioStream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TcpAudioServer.h" />
     <ClInclude Include="TcpAudioSession.h" />
-    <ClInclude Include="..\Audio\AudioStream.h" />
   </ItemGroup>
 </Project>

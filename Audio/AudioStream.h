@@ -9,6 +9,7 @@ public:
   AudioStream();
 
   void AudioStream::feed(const char* iCharSamples, unsigned int iSampleCount);
+  void AudioStream::feed(const sf::Int16* iSamples, std::size_t iSampleCount);
   void AudioStream::start();
 
 private:

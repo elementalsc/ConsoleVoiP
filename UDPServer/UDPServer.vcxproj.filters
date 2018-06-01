@@ -3,12 +3,8 @@
   <ItemGroup>
     <ClCompile Include="UDPServer.cpp" />
     <ClCompile Include="UdpAudioServer.cpp" />
-    <ClCompile Include="UdpAudioSession.cpp" />
-    <ClCompile Include="..\Audio\AudioStream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UdpAudioServer.h" />
-    <ClInclude Include="UdpAudioSession.h" />
-    <ClInclude Include="..\Audio\AudioStream.h" />
   </ItemGroup>
 </Project>

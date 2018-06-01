@@ -13,7 +13,6 @@ void AudioStream::start()
   play();
 }
 
-
 bool AudioStream::onGetData(sf::SoundStream::Chunk& data)
 {
 
@@ -24,7 +23,6 @@ bool AudioStream::onGetData(sf::SoundStream::Chunk& data)
   }
 
   // Copy samples into a local buffer to avoid synchronization problems
-  // (don't forget that we run in two separate threads)
   {
     std::lock_guard<std::mutex> lock(mSamplesMutex);
     mTempBuffer.assign(mSamples.begin() + mOffset, mSamples.end());
@@ -45,16 +43,24 @@ void AudioStream::onSeek(sf::Time timeOffset)
   mOffset = timeOffset.asMilliseconds() * getSampleRate() * getChannelCount() / 1000;
 }
 
-void AudioStream::feed(const char* iCharSamples, unsigned int iSampleCount)
+void AudioStream::feed(const char* iCharSamples, std::size_t iSampleCount)
 {
   // Convert data from uint8 to samples format
-  const sf::Int16* samples     = reinterpret_cast<const sf::Int16*>(iCharSamples);
-  std::size_t      sampleCount = iSampleCount;
+  const sf::Int16* wSamples     = reinterpret_cast<const sf::Int16*>(iCharSamples);
 
   // Copy new samples to class buffer
   {
     std::lock_guard<std::mutex> lock(mSamplesMutex);
-    std::copy(samples, samples + sampleCount, std::back_inserter(mSamples));
+    std::copy(wSamples, wSamples + iSampleCount, std::back_inserter(mSamples));
+  }
+}
+
+void AudioStream::feed(const sf::Int16* iSamples, std::size_t iSampleCount)
+{
+  // Copy new samples to class buffer
+  {
+    std::lock_guard<std::mutex> lock(mSamplesMutex);
+    std::copy(iSamples, iSamples + iSampleCount, std::back_inserter(mSamples));
   }
 }
 

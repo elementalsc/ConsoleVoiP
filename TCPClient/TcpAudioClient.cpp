@@ -24,18 +24,25 @@ TcpAudioClient::TcpAudioClient() :
 // 
 //   // set the device
 //   if (!setDevice(availableDevices[stoi(iInputDevice)]))
-  if (!setDevice(availableDevices[0]))
-  {
-    std::cout << "An error occured!" << std::endl;
-  }
-
-  setProcessingInterval(sf::milliseconds(20));
+   if (!setDevice(availableDevices[0]))
+   {
+     std::cout << "An error occured!" << std::endl;
+   }
+   else
+   {
+     std::cout << "Capture device selected : " << availableDevices[0] << std::endl;
+     setProcessingInterval(sf::milliseconds(20));
+   }
 }
 
 TcpAudioClient::~TcpAudioClient()
 {
   std::lock_guard<std::mutex> lock(mSocketMutex);
-  mSocket->close();
+  if(mSocket->is_open())
+  {
+    mSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+    mSocket->close();
+  }
   if(!mSocket)    delete mSocket;
   if(!mResolver)  delete mResolver;
 }
@@ -58,7 +65,14 @@ bool TcpAudioClient::init(std::string iHost, std::string iPort)
 
   mHost = iHost;
   mPort = stoi(iPort);
+
+  addDestination(mHost,mPort);
   return true;
+}
+
+void TcpAudioClient::addDestination(std::string iHost, int iPort)
+{
+  destinationList.push_back(std::make_shared<TcpDestination>(iHost, iPort));
 }
 
 
@@ -74,15 +88,21 @@ bool TcpAudioClient::send(bool iEnableSending)
     // Debouncing
     Sleep(mDebouncingTime);
 
-    // Open connection
+    // Open connections
     try
     {
-      std::lock_guard<std::mutex> lock(mSocketMutex);
-      mSocket = new tcp::socket(mService);
-      address_v4 wIpAddress = address_v4::from_string(mHost);
-      tcp::endpoint wEndpoint = tcp::endpoint(wIpAddress, mPort);
-      tcp::resolver::iterator wEndpointIterator = mResolver->resolve(wEndpoint);
-      connect(*mSocket, wEndpointIterator, ec);
+      for(std::shared_ptr<TcpDestination> wDestination : destinationList)
+      {
+        // Resolve distant endpoint
+        tcp::resolver::iterator wEndpointIterator = mResolver->resolve(wDestination->getEndpoint());
+        
+        // Create and connect new socket
+        // C++14 required to get all features related to unique_ptr
+        socketList.push_back(std::make_shared<tcp::socket>(mService));
+        connect(*socketList.back(), wEndpointIterator, ec);
+
+        std::cout << "Connection made with " << wDestination->getHost() << ":" << wDestination->getPort() << std::endl;
+      }
     } 
     catch (std::exception& e)
     {
@@ -90,7 +110,6 @@ bool TcpAudioClient::send(bool iEnableSending)
       return false;
     }
     
-    std::cout << std::endl << "Successfully opened connection!" << std::endl;
 
     // Wait for recorder to become available
     while(!isAvailable())
@@ -116,19 +135,38 @@ bool TcpAudioClient::send(bool iEnableSending)
     Sleep(mDebouncingTime);
 
     // Close connection
-    try
-    {      
-      std::lock_guard<std::mutex> lock(mSocketMutex);
-      mSocket->close();
-      if(!mSocket)    delete mSocket;
-    } 
-    catch (std::exception& e)
+
     {
-      std::cerr << "Exception :" << std::endl << e.what() << "\n";
-      return false;
+      std::lock_guard<std::mutex> lock(mSocketMutex);
+      try
+      {
+        for(std::shared_ptr<tcp::socket> wSocket : socketList)
+        {
+          // If socket is already closed
+          if(!wSocket->is_open()) continue;
+          
+          std::string wHost = wSocket->remote_endpoint().address().to_string();
+          unsigned int wPort = wSocket->remote_endpoint().port();
+
+          // Close socket
+          wSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+          wSocket->close();
+          std::cout << std::endl << "Successfully closed connection to "<< wHost << ":" << wPort << std::endl;
+        }
+
+        // Clear the vector
+        socketList.clear();
+      } 
+      catch (std::exception& e)
+      {
+        std::cerr << "Could not close a connection properly" << std::endl;
+        std::cerr << "Exception :" << std::endl << e.what() << "\n";
+
+        return false;
+      }
+
     }
 
-    std::cout << std::endl << "Successfully closed connection!" << std::endl;
 
     // Stop recording
     stop();
@@ -149,13 +187,21 @@ bool TcpAudioClient::onProcessSamples(const sf::Int16* samples, std::size_t samp
   if(!mEnableSending) return false;
 
   // Send over TCP
+  // 
+  //  This whole Try/Catch might go in a thread!
+  //
   try
   {
     std::lock_guard<std::mutex> lock(mSocketMutex);
-    if(mSocket)
+    for(std::shared_ptr<tcp::socket> wSocket : socketList)
     {
-      write(*mSocket, boost::asio::buffer(samplesAsChars,samplesAsCharsCount),ec);
-      std::cout << ">";
+      if(wSocket)
+      {
+        // Separate thread to continuously write on all sockets might be required
+        
+        write(*wSocket, boost::asio::buffer(samplesAsChars,samplesAsCharsCount),ec);
+        std::cout << ">";
+      }
     }
   } 
   catch (std::exception& e)

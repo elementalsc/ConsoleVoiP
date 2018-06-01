@@ -9,8 +9,10 @@ int main()
 
   std::cout << "Starting server on port " << wPort << "..." << std::endl;
 
+  // Creating instance of UDP server
   UdpAudioServer mUdpAudioServer(ioService, wPort);
 
+  // Run its service
   std::thread serviceThread([&](){ioService.run();}); 
 
   serviceThread.join();

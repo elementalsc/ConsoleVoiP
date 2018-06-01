@@ -42,15 +42,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Audio\AudioStream.cpp" />
     <ClCompile Include="UdpAudioServer.cpp" />
-    <ClCompile Include="UdpAudioSession.cpp" />
     <ClCompile Include="UDPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Audio\AudioStream.h" />
     <ClInclude Include="UdpAudioServer.h" />
-    <ClInclude Include="UdpAudioSession.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Audio\Audio.vcxproj">
+      <Project>{afcf20ed-d53c-469f-b47b-060ea5e4dd78}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

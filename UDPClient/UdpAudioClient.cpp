@@ -11,12 +11,12 @@ UdpAudioClient::UdpAudioClient() :
   //   std::cout << "Select input device..." << std::endl;
   // 
 
-  std::cout << "Available devices : " << std::endl;
-
-  for(unsigned int i = 0; i < availableDevices.size(); ++i)
-  {
-    std::cout << i << " : " << availableDevices[i] << std::endl;
-  }
+//   std::cout << "Available devices : " << std::endl;
+// 
+//   for(unsigned int i = 0; i < availableDevices.size(); ++i)
+//   {
+//     std::cout << i << " : " << availableDevices[i] << std::endl;
+//   }
   // 
   //   std::string iInputDevice;
   //    std::cin >> iInputDevice;
@@ -28,8 +28,13 @@ UdpAudioClient::UdpAudioClient() :
   {
     std::cout << "An error occured!" << std::endl;
   }
+  else
+  {
+    std::cout << "Capture device selected : " << availableDevices[0] << std::endl;
+    setProcessingInterval(sf::milliseconds(20));
+  }
 
-  setProcessingInterval(sf::milliseconds(20));
+  
 }
 
 UdpAudioClient::~UdpAudioClient()
@@ -77,6 +82,8 @@ bool UdpAudioClient::init(std::string & iHost, std::string & iPort)
   return true;
 }
 
+
+
 // void UdpAudioClient::send(std::string & iTextToSend)
 // {
 //   //iTextToSend.append('\0');
@@ -117,8 +124,6 @@ bool UdpAudioClient::send(bool iEnableSending)
     
      // Check actual state of switch
     if(mEnableSending) return true;
-
-
 
     // Debouncing
     Sleep(mDebouncingTime);
@@ -170,7 +175,6 @@ bool UdpAudioClient::onProcessSamples(const sf::Int16* samples, std::size_t samp
     std::lock_guard<std::mutex> lock(mSocketMutex);
     if(mSocket)
     {
-
       mSocket->send_to(boost::asio::buffer(samplesAsChars,samplesAsCharsCount),*mEndpoint, 0, ec);
       std::cout << ">";
     }
