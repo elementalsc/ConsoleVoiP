@@ -33,6 +33,7 @@ Sidetone::Sidetone() :
 
   start();
   mAudioStream.start();
+  enable(true);
 }
 
 Sidetone::~Sidetone()
