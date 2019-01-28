@@ -4,9 +4,13 @@
     <ClCompile Include="UDPServer.cpp" />
     <ClCompile Include="UdpAudioServer.cpp" />
     <ClCompile Include="AudioStream.cpp" />
+    <ClCompile Include="AudioAccumulator.cpp" />
+    <ClCompile Include="CircularBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UdpAudioServer.h" />
     <ClInclude Include="AudioStream.h" />
+    <ClInclude Include="AudioAccumulator.h" />
+    <ClInclude Include="CircularBuffer.h" />
   </ItemGroup>
 </Project>

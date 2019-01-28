@@ -6,6 +6,7 @@ AudioStream::AudioStream() :
   // Set the sound parameters
   initialize(1, 44100);
   std::cout << "AudioStream initialized!" << std::endl;
+  play();
 }
 
 void AudioStream::start()
@@ -63,4 +64,3 @@ void AudioStream::feed(const sf::Int16* iSamples, std::size_t iSampleCount)
     std::copy(iSamples, iSamples + iSampleCount, std::back_inserter(mSamples));
   }
 }
-

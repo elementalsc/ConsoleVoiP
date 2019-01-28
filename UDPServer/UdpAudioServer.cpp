@@ -1,5 +1,6 @@
 #include "UdpAudioServer.h"
 #include "AudioStream.h"
+#include "AudioAccumulator.h"
 
 UdpAudioServer::UdpAudioServer(boost::asio::io_service & service, short int port) :
   mSocket(service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
@@ -29,17 +30,20 @@ UdpAudioServer::accept()
         // Get sender's IP address
         std::string wIpAddress(mClientEndpoint.address().to_string());
 
-        // If it does not exist
-        if(mAudioStreamsMap.find(wIpAddress) == mAudioStreamsMap.end())
-        {
-          std::lock_guard<std::mutex> lock(mMapMutex);
-          // Create a new AudioStream for this specific address
-          mAudioStreamsMap[wIpAddress] = std::make_shared<AudioStream>();
-          mAudioStreamsMap[wIpAddress]->start();
-        }
+//         // If it does not exist
+//         if(mAudioStreamsMap.find(wIpAddress) == mAudioStreamsMap.end())
+//         {
+//           std::lock_guard<std::mutex> lock(mMapMutex);
+//           // Create a new AudioStream for this specific address
+//           mAudioStreamsMap[wIpAddress] = std::make_shared<AudioStream>();
+//           mAudioStreamsMap[wIpAddress]->start();
+//         }
+// 
+//         // Feed received audio to stream
+//         mAudioStreamsMap[wIpAddress]->feed(reinterpret_cast<char*>(mData), iBytesReceived/2);
 
-        // Feed received audio to stream
-        mAudioStreamsMap[wIpAddress]->feed(reinterpret_cast<char*>(mData), iBytesReceived/2);
+        mAudioAccumulator[wIpAddress]->push(reinterpret_cast<short*>(mData), iBytesReceived / 2);
+
       }
 
       // Validate if this is necessary
