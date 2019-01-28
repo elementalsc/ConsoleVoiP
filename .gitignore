@@ -41,3 +41,14 @@
 *.opensdf
 *.ib_pdb_index
 *.props
+*.config
+*.ipch
+*.db-wal
+*.db-shm
+*.db
+*.opendb
+*.cache
+*.ipdb
+*.user
+*.iobj
+*.CopyComplete

@@ -1,5 +1,5 @@
 #include "UdpAudioServer.h"
-#include "../Audio/AudioStream.h"
+#include "AudioStream.h"
 
 UdpAudioServer::UdpAudioServer(boost::asio::io_service & service, short int port) :
   mSocket(service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
@@ -29,25 +29,17 @@ UdpAudioServer::accept()
         // Get sender's IP address
         std::string wIpAddress(mClientEndpoint.address().to_string());
 
-        // Check if it's already in the map
-        mapIterator mapIt = mAudioStreamsMap.find(wIpAddress);
-
-        // If it is not
-        if(mapIt == mAudioStreamsMap.end())
+        // If it does not exist
+        if(mAudioStreamsMap.find(wIpAddress) == mAudioStreamsMap.end())
         {
+          std::lock_guard<std::mutex> lock(mMapMutex);
           // Create a new AudioStream for this specific address
-          mapEntry wNewMapEntry (wIpAddress, std::make_shared<AudioStream>());
-          wNewMapEntry.second->start();
-
-          // Add it to the map
-          {
-            std::lock_guard<std::mutex> lock(mMapMutex);
-            mapIt = mAudioStreamsMap.insert(mAudioStreamsMap.end(), std::move(wNewMapEntry));
-          }
+          mAudioStreamsMap[wIpAddress] = std::make_shared<AudioStream>();
+          mAudioStreamsMap[wIpAddress]->start();
         }
 
         // Feed received audio to stream
-        mapIt->second->feed(reinterpret_cast<char*>(mData), iBytesReceived/2);
+        mAudioStreamsMap[wIpAddress]->feed(reinterpret_cast<char*>(mData), iBytesReceived/2);
       }
 
       // Validate if this is necessary
